@@ -13,7 +13,7 @@ export default function LayoutRoot({ children, title, subtitle }: LayoutRootProp
 
       <Header title={title} subtitle={subtitle} />
 
-      <main>{children}</main>
+      <main className="p-6">{children}</main>
     </div>
   );
 }
