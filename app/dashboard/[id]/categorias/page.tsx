@@ -38,7 +38,7 @@ export default function CategoriesPage() {
             <span className="text-cream/70 text-sm">Buscando dados...</span>
           </div>
         )}
-        {!isLoading && <Cartegories categories={categories} />}
+        {!isLoading && <Cartegories categories={categories} fetchData={fetchData}/>}
       </>
     </Layout.Root>
   );

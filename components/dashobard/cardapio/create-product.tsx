@@ -4,17 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loading } from "@/components/ui/loadings";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Category } from "@/types/category-type";
-import { CircleCheckBig, CircleX, ImageIcon, Plus, X } from "lucide-react";
+import { CircleCheckBig, CircleX, Plus } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface CreateProductProps {
   categories: Category[];
-  fetchData: ()=>Promise<void>;
+  fetchData: () => Promise<void>;
 }
 
 export default function CreateProduct({ categories, fetchData }: CreateProductProps) {
@@ -27,35 +28,12 @@ export default function CreateProduct({ categories, fetchData }: CreateProductPr
     description: "",
     price: "",
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string>("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageName(file.name);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setImageName("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
   };
 
   const handleSaveProduct = async () => {
@@ -109,8 +87,6 @@ export default function CreateProduct({ categories, fetchData }: CreateProductPr
       });
 
       setFormData({ name: "", categoryId: "", description: "", price: "" });
-      setImagePreview(null);
-      setImageName("");
       setIsDialogOpen(false);
       await fetchData();
     } catch (error: any) {
@@ -127,8 +103,6 @@ export default function CreateProduct({ categories, fetchData }: CreateProductPr
     setIsDialogOpen(open);
     if (!open) {
       setFormData({ name: "", categoryId: "", description: "", price: "" });
-      setImagePreview(null);
-      setImageName("");
     }
   };
 
@@ -201,56 +175,23 @@ export default function CreateProduct({ categories, fetchData }: CreateProductPr
                 disabled={isLoading}
               />
             </div>
-            <div className="space-y-2">
-              <Label>Imagem</Label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                id="image-input"
-                disabled={isLoading}
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isLoading}
-                className="w-full h-10 border-2 border-dashed border-muted-foreground/30 rounded-lg hover:border-primary/50 hover:bg-primary/10 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ImageIcon className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
-                <span className="text-sm text-muted-foreground group-hover:text-primary font-medium truncate">
-                  {imageName || "Selecionar imagem"}
-                </span>
-              </button>
-            </div>
           </div>
 
-          {imagePreview && (
-            <div className="relative rounded-lg border border-border overflow-hidden bg-muted">
-              <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover" />
-              <button
-                onClick={handleRemoveImage}
-                disabled={isLoading}
-                className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-600 text-foreground p-1 rounded-md transition-colors disabled:opacity-50"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-
           <div className="flex justify-end gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => setIsDialogOpen(false)}
-              disabled={isLoading}
-            >
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isLoading}>
               Cancelar
             </Button>
             <Button
               onClick={handleSaveProduct}
               disabled={!formData.name || !formData.categoryId || !formData.price || isLoading}
             >
-              {isLoading ? "Salvando..." : "Salvar Produto"}
+              {isLoading ? (
+                <>
+                  <Loading variant="dots" size="sm" className="mr-2" />
+                </>
+              ) : (
+                "Salvar produto"
+              )}
             </Button>
           </div>
         </div>

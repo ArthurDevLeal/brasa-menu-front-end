@@ -22,6 +22,7 @@ export default function SideBar() {
   const [isHydrated, setIsHydrated] = useState(false);
   const { id } = useParams();
   const router = useRouter();
+  const pathname = usePathname();
   const { user, updateRestaurantName, removeUser } = useUserStore();
   const { removeToken } = useTokenStore();
 
@@ -55,8 +56,13 @@ export default function SideBar() {
     router.push("/dashboard/login");
   };
 
+  const getActiveRoute = () => {
+    const segments = pathname.split("/").filter(Boolean);
+    return segments[2] || "";
+  };
+
+  const activeRoute = getActiveRoute();
   const restaurantName = isHydrated ? user?.userRestaurantName || restaurant?.name || "" : "";
-  const pathname = usePathname();
 
   return (
     <aside className="relative h-screen w-64 bg-card border-r border-border row-span-2">
@@ -71,11 +77,11 @@ export default function SideBar() {
       </div>
       <nav className="flex flex-col gap-1 p-4">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/" && pathname.endsWith(item.href));
+          const isActive = activeRoute === item.href;
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={`/dashboard/${id}/${item.href}`}
               className={cn(
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted",

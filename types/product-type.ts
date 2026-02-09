@@ -44,7 +44,7 @@ export interface getProductByIdProps {
 }
 
 export interface getProductByIdPropsReturn {
-  data: Product;
+  data: ProductWithRelations;
 }
 
 export interface getCategoryProductsProps {

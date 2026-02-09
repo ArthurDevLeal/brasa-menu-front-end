@@ -1,19 +1,45 @@
+"use client";
+import { deleteCategory } from "@/actions/category/category";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Category, CategoryWithProductCount } from "@/types/category-type";
-import { FolderOpen, GripVertical, Pencil, Trash2, UtensilsCrossed } from "lucide-react";
+import { CategoryWithProductCount } from "@/types/category-type";
+import { FolderOpen, GripVertical, Trash2, UtensilsCrossed } from "lucide-react";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
+import { UpdateCategoryDialog } from "./update-category-dialog";
 
 interface categoriesProps {
   categories: CategoryWithProductCount[];
+  fetchData: () => Promise<void>;
 }
 
-export default function Cartegories({ categories }: categoriesProps) {
+export default function Cartegories({ categories, fetchData }: categoriesProps) {
+  const { id }: { id: string } = useParams();
+
+  const handleDelete = async (categoryId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const toastId = toast.loading("Removendo categoria...");
+      await deleteCategory({ restaurantId: id, categoryId });
+      await fetchData();
+      toast.success("Categoria removida com sucesso!", { id: toastId });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro ao remover categoria";
+      toast.error(errorMessage);
+      console.error("Error deleting category:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 mt-4">
       {categories.map((category) => (
-        <Card key={category.id} className={`transition-colors  ${!category.isActive ? "opacity-60" : ""}`}>
-          <CardContent className="flex items-center gap-4">
+        <Card
+          key={category.id}
+          className={`transition-colors ${!category.isActive ? "opacity-60" : ""}`}
+        >
+          <CardContent className="flex items-center gap-4 ">
             <div className="cursor-grab text-muted-foreground hover:text-foreground">
               <GripVertical className="h-5 w-5" />
             </div>
@@ -28,13 +54,17 @@ export default function Cartegories({ categories }: categoriesProps) {
                 <Badge
                   variant="secondary"
                   className={
-                    category.isActive ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"
+                    category.isActive
+                      ? "bg-green-500/10 text-green-500"
+                      : "bg-muted text-muted-foreground"
                   }
                 >
                   {category.isActive ? "Ativa" : "Inativa"}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground truncate">{category.description}</p>
+              <p className="text-sm text-muted-foreground truncate">
+                {category.description}
+              </p>
             </div>
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -43,11 +73,14 @@ export default function Cartegories({ categories }: categoriesProps) {
             </div>
 
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon">
-                <Pencil className="h-4 w-4" />
-              </Button>
+              <UpdateCategoryDialog
+                category={category}
+                restaurantId={id}
+                onSuccess={fetchData}
+              />
               <Button
                 variant="ghost"
+                onClick={(e) => handleDelete(category.id, e)}
                 size="icon"
                 className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
               >
@@ -57,6 +90,7 @@ export default function Cartegories({ categories }: categoriesProps) {
           </CardContent>
         </Card>
       ))}
+
       {categories.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">

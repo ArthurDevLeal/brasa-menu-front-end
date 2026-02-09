@@ -92,7 +92,7 @@ export async function updateCategory({
   }
 
   try {
-    const res = await apiToken.patch(`/restaurants/${restaurantId}/categories/${categoryId}`, updateData);
+    const res = await apiToken.put(`/restaurants/${restaurantId}/categories/${categoryId}`, updateData);
 
     const data: updateCategoryPropsReturn = res.data;
 

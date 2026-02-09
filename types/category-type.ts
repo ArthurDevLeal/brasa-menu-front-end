@@ -54,7 +54,8 @@ export interface getRestaurantCategoriesPropsReturn {
 
 export interface CategoryWithProductCount extends Category {
   productCount: number;
-  products:Product[]
+  products: Product[];
+  totalViews: number;
 }
 
 export interface getRestaurantCategoriesWithProductCountProps {

@@ -58,7 +58,7 @@ export default function CardapioPage() {
             <span className="text-cream/70 text-sm">Buscando dados...</span>
           </div>
         )}
-        {!isLoading && <TableComp filteredProducts={filteredProducts} />}
+        {!isLoading && <TableComp fetchData={fetchData} filteredProducts={filteredProducts} />}
       </div>
     </Layout.Root>
   );

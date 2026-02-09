@@ -6,7 +6,9 @@ export interface Restaurant {
   phone: string;
   description: string | null;
   logoUrl: string | null;
+  logoPath: string | null;      // NEW
   bannerUrl: string | null;
+  bannerPath: string | null;    // NEW
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -34,8 +36,10 @@ export interface updateRestaurantProps {
   address?: string;
   phone?: string;
   description?: string;
-  logoUrl?: string;
-  bannerUrl?: string;
+  logoUrl?: string | null;
+  logoPath?: string | null;     // NEW
+  bannerUrl?: string | null;
+  bannerPath?: string | null;   // NEW
 }
 
 export interface updateRestaurantPropsReturn {

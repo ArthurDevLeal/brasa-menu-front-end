@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loading } from "@/components/ui/loadings";
 import { Textarea } from "@/components/ui/textarea";
 import { CircleCheckBig, CircleX, Plus } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -11,7 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface CategoriesHeaderProps {
-  fetchData: ()=>Promise<void>;
+  fetchData: () => Promise<void>;
   categoryLength: number;
 }
 
@@ -111,18 +112,17 @@ export default function CategoriesHeader({ fetchData, categoryLength }: Categori
               />
             </div>
             <div className="flex justify-end gap-3">
-              <Button 
-                variant="outline" 
-                onClick={() => setIsDialogOpen(false)}
-                disabled={isLoading}
-              >
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isLoading}>
                 Cancelar
               </Button>
-              <Button 
-                onClick={handleSaveCategory} 
-                disabled={!formData.name || isLoading}
-              >
-                {isLoading ? "Salvando..." : "Salvar Categoria"}
+              <Button onClick={handleSaveCategory} disabled={!formData.name || isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loading variant="dots" size="sm" className="mr-2" />
+                  </>
+                ) : (
+                  "Salvar categoria"
+                )}
               </Button>
             </div>
           </div>

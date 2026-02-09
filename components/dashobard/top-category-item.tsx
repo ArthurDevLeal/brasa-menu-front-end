@@ -1,7 +1,7 @@
 import { CategoryWithProductCount } from "@/types/category-type";
 
 interface TopCategoryProsp {
-  category: CategoryWithProductCount
+  category: CategoryWithProductCount;
 }
 export default function TopCategoryItem({ category }: TopCategoryProsp) {
   return (
@@ -12,7 +12,7 @@ export default function TopCategoryItem({ category }: TopCategoryProsp) {
       </div>
       <div className="text-right">
         <p className="text-sm font-medium">{category.isActive}</p>
-        <p className="text-xs text-muted-foreground">views</p>
+        <p className="text-xs text-muted-foreground">{category.totalViews} views</p>
       </div>
     </div>
   );

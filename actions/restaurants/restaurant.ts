@@ -71,7 +71,9 @@ export async function updateRestaurant({
   phone,
   description,
   logoUrl,
+  logoPath,      
   bannerUrl,
+  bannerPath,    
 }: updateRestaurantProps): Promise<updateRestaurantPropsReturn> {
   if (!id || id.trim().length === 0) {
     throw new Error("Restaurant ID is required");
@@ -112,17 +114,26 @@ export async function updateRestaurant({
   }
 
   if (logoUrl !== undefined) {
-    updateData.logoUrl = logoUrl?.trim() || null;
+    updateData.logoUrl = logoUrl === null ? null : logoUrl?.trim() || null;
+  }
+
+  if (logoPath !== undefined) {
+    updateData.logoPath = logoPath === null ? null : logoPath?.trim() || null;
   }
 
   if (bannerUrl !== undefined) {
-    updateData.bannerUrl = bannerUrl?.trim() || null;
+    updateData.bannerUrl = bannerUrl === null ? null : bannerUrl?.trim() || null;
+  }
+
+  if (bannerPath !== undefined) {
+    updateData.bannerPath = bannerPath === null ? null : bannerPath?.trim() || null;
   }
 
   try {
+    
     const res = await apiToken.patch(`/restaurants/${id}`, updateData);
-
     const data: updateRestaurantPropsReturn = res.data;
+
 
     if (!data.data || !data.data.id) {
       throw new Error("Invalid response from server");
