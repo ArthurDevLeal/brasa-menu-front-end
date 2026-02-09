@@ -148,7 +148,7 @@ export default function CreateRestaurantCard({ handleFetchRestaurants }: CreateR
               <Label htmlFor="name">Nome do Restaurante *</Label>
               <Input
                 id="name"
-                placeholder="Ex: Brasa Steakhouse"
+                placeholder="Ex: Brasa menu Steakhouse"
                 value={newRestaurant.name}
                 onChange={(e) => setNewRestaurant({ ...newRestaurant, name: e.target.value })}
                 disabled={isLoading}

@@ -64,7 +64,7 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="font-display text-4xl font-bold tracking-tight text-primary mb-2">BRASA</h1>
+          <h1 className="font-display text-4xl font-bold tracking-tight text-primary mb-2">BRASA MENU</h1>
           <p className="text-muted-foreground text-sm">Painel Administrativo</p>
         </div>
 
@@ -138,7 +138,7 @@ const AdminLogin = () => {
         </Card>
 
         <p className="text-center text-muted-foreground text-xs mt-6">
-          © 2026 Brasa. Todos os direitos reservados.
+          © 2026 Brasa menu. Todos os direitos reservados.
         </p>
       </div>
     </div>

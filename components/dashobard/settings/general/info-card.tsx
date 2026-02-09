@@ -98,7 +98,7 @@ export function RestaurantInfoCard({
             <Label htmlFor="name">Nome do Restaurante</Label>
             <Input
               id="name"
-              placeholder="Ex: Brasa Steakhouse"
+              placeholder="Ex: Brasa menu Steakhouse"
               value={formData.name}
               onChange={(e) => onInputChange("name", e.target.value)}
               disabled={isLoading}
@@ -112,7 +112,7 @@ export function RestaurantInfoCard({
               </span>
               <Input
                 id="slug"
-                placeholder="brasa"
+                placeholder="brasa-menu"
                 value={formData.slug}
                 onChange={(e) => onInputChange("slug", e.target.value)}
                 className="rounded-l-none"
