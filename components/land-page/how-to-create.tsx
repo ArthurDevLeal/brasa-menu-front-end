@@ -121,7 +121,7 @@ export function FormActions({ cancelText = "Cancelar", submitText = "Salvar Prod
 export function HowToCreateImage({ children }: HowToCreateImageProps) {
   return (
     <div className="relative">
-      <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 rounded-xl flex items-center justify-center border border-border">
+      <div className="aspect-square bg-linear-to-br from-muted to-muted/50 rounded-xl flex items-center justify-center border border-border">
         <div className="text-center">{children}</div>
       </div>
     </div>

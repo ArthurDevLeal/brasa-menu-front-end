@@ -17,8 +17,8 @@ interface HeroImageProps {
 export function Hero({ children }: HeroProps) {
   return (
     <section className="relative overflow-hidden px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">{children}</div>
+      <div className="max-w-5xl mx-auto">
+        <div className="items-center">{children}</div>
       </div>
     </section>
   );
@@ -42,7 +42,7 @@ interface HeroTitleProps {
 }
 
 export function HeroTitle({ children }: HeroTitleProps) {
-  return <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-foreground">{children}</h1>;
+  return <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-foreground text-center">{children}</h1>;
 }
 
 interface HeroDescriptionProps {
@@ -50,7 +50,7 @@ interface HeroDescriptionProps {
 }
 
 export function HeroDescription({ children }: HeroDescriptionProps) {
-  return <p className="text-lg text-muted-foreground">{children}</p>;
+  return <p className="text-lg text-muted-foreground text-center">{children}</p>;
 }
 
 interface HeroCtasProps {
@@ -78,7 +78,7 @@ export function HeroCtas({ primaryText, secondaryText, primaryHref = "/dashboard
 export function HeroContent({ children }: HeroContentProps) {
   return (
     <div className="space-y-8">
-      <div className="space-y-4">{children}</div>
+      <div className="flex flex-col items-center justify-center space-y-4">{children}</div>
     </div>
   );
 }
@@ -86,50 +86,73 @@ export function HeroContent({ children }: HeroContentProps) {
 export function HeroImage({ children }: HeroImageProps) {
   return (
     <div className="relative hidden md:block">
-      <div className="relative aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-border/50 overflow-hidden">
+      <div className="relative aspect-square rounded-2xl bg-linear-to-br from-primary/20 to-primary/5 border border-border/50 overflow-hidden">
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-8">{children}</div>
       </div>
     </div>
   );
 }
 
+import { ReactNode } from 'react';
+
 interface HeroDashboardCardProps {
   revenue: string;
-  items: number;
-  image?: React.ReactNode;
+  items: string;
+  image: ReactNode;
 }
+
+const StatusIndicator = () => (
+  <div className="flex gap-1.5">
+    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 shadow-sm" />
+    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm" />
+    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" />
+  </div>
+);
+
+const MetricsBar = () => (
+  <div className="space-y-2">
+    <h3 className="text-xs font-medium text-primary uppercase tracking-wide">Peças</h3>
+    <div className="flex gap-1.5">
+      {[0.3, 0.5, 0.7].map((opacity, index) => (
+        <div
+          key={index}
+          className="flex-1 h-1.5 rounded-full bg-primary transition-all duration-300 hover:h-2"
+          style={{ opacity }}
+        />
+      ))}
+    </div>
+  </div>
+);
 
 export function HeroDashboardCard({ revenue, items, image }: HeroDashboardCardProps) {
   return (
-    <>
-      <div className="bg-card rounded-xl p-6 shadow-lg border border-border w-full max-w-sm">
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-semibold text-foreground">Dashboard</span>
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-              <div className="w-3 h-3 rounded-full bg-green-400"></div>
-              <div className="w-3 h-3 rounded-full bg-blue-400"></div>
-            </div>
+    <div className="flex gap-6 items-center">
+      <div className="bg-card rounded-lg p-6 border border-border/60 shadow-sm hover:shadow-md transition-shadow duration-300 flex-1 max-w-sm">
+        <div className="space-y-5">
+          <div className="flex justify-between items-start">
+            <span className="text-xs font-semibold text-foreground uppercase tracking-wider">Dashboard</span>
+            <StatusIndicator />
           </div>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-muted-foreground">{revenue}</span>
-              <span className="text-xs text-muted-foreground">{items}</span>
-            </div>
-            <div className="space-y-2">
-              <div className="text-xs text-primary font-medium">Peças</div>
-              <div className="flex gap-2">
-                <div className="flex-1 h-6 bg-primary/30 rounded"></div>
-                <div className="flex-1 h-6 bg-primary/50 rounded"></div>
-                <div className="flex-1 h-6 bg-primary/70 rounded"></div>
+
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs text-muted-foreground font-medium">Revenue</span>
+                <span className="text-sm text-foreground font-semibold">{revenue}</span>
+              </div>
+              <div className="flex flex-col gap-0.5 text-right">
+                <span className="text-xs text-muted-foreground font-medium">Items</span>
+                <span className="text-sm text-foreground font-semibold">{items}</span>
               </div>
             </div>
+
+            <MetricsBar />
           </div>
         </div>
       </div>
-      {image}
-    </>
+
+      <div className="hidden lg:flex">{image}</div>
+    </div>
   );
 }
 

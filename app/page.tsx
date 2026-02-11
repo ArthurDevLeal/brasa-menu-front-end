@@ -27,13 +27,9 @@ import {
   HeaderActions,
   HeaderLogo,
   Hero,
-  HeroBadge,
   HeroContent,
   HeroCtas,
-  HeroDashboardCard,
   HeroDescription,
-  HeroImage,
-  HeroProductPlaceholder,
   HeroTitle,
   HowToCreate,
   HowToCreateContainer,
@@ -129,18 +125,14 @@ export default function Home() {
       <Hero>
         <HeroContent>
           <HeroTitle>
-            Transforme seu Restaurante em uma <span className="text-primary">Máquina de Vendas Digital</span>
+            Transforme seu Restaurante em uma <br/> <span className="text-primary">Máquina de Vendas Digital</span>
           </HeroTitle>
           <HeroDescription>
-            Gerencie pedidos, atualize cardápios em tempo real e analise o desempenho do seu negócio com nossa
+            Gerencie pedidos, atualize cardápios em tempo real e analise o desempenho <br/> do seu negócio com nossa
             plataforma tudo-em-um.
           </HeroDescription>
           <HeroCtas primaryText="Começar Gratuitamente" secondaryText="Ver Demonstração" />
         </HeroContent>
-
-        <HeroImage>
-          <HeroDashboardCard revenue="R$ 2.450" items={16} image={<HeroProductPlaceholder />} />
-        </HeroImage>
       </Hero>
 
       <Features>
@@ -202,7 +194,7 @@ export default function Home() {
 
           <FooterColumn title="Produto">
             <FooterList>
-              {footerProductLinks.map((link,i) => (
+              {footerProductLinks.map((link, i) => (
                 <FooterListItem key={i} href={link.href}>
                   {link.label}
                 </FooterListItem>
@@ -212,7 +204,7 @@ export default function Home() {
 
           <FooterColumn title="Empresa">
             <FooterList>
-              {footerCompanyLinks.map((link,i) => (
+              {footerCompanyLinks.map((link, i) => (
                 <FooterListItem key={i} href={link.href}>
                   {link.label}
                 </FooterListItem>
@@ -222,7 +214,7 @@ export default function Home() {
 
           <FooterColumn title="Legal">
             <FooterList>
-              {footerLegalLinks.map((link,i) => (
+              {footerLegalLinks.map((link, i) => (
                 <FooterListItem key={i} href={link.href}>
                   {link.label}
                 </FooterListItem>
