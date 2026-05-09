@@ -1,18 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Minus, Plus, Check } from "lucide-react";
+import { recordAddToCart } from "@/actions/metrics/metrics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { ProductWithRelations } from "@/types/product-type";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCartStore } from "@/store/cart-store";
-import { recordAddToCart } from "@/actions/metrics/metrics";
+import { ProductWithRelations } from "@/types/product-type";
+import { Check, Minus, Plus } from "lucide-react";
+import { useState } from "react";
 
 interface SelectedVariant {
   variantCategoryId: string;
@@ -53,10 +51,7 @@ export default function ProductModal({
   };
 
   const isAddonSelected = (categoryId: string, addonId: string): boolean => {
-    return (
-      selectedAddons.get(categoryId)?.some((addon) => addon.id === addonId) ??
-      false
-    );
+    return selectedAddons.get(categoryId)?.some((addon) => addon.id === addonId) ?? false;
   };
 
   const toggleAddon = (
@@ -76,10 +71,7 @@ export default function ProductModal({
           categoryAddons.filter((a) => a.id !== addon.id)
         );
       } else {
-        if (
-          maxSelections === null ||
-          categoryAddons.length < maxSelections
-        ) {
+        if (maxSelections === null || categoryAddons.length < maxSelections) {
           newMap.set(categoryId, [...categoryAddons, addon]);
         }
       }
@@ -140,7 +132,7 @@ export default function ProductModal({
 
   return (
     <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-      <DialogContent className="sm:max-w-lg bg-background border-border max-h-[90vh] overflow-hidden p-0 rounded-2xl">
+      <DialogContent className="sm:max-w-lg bg-background border-border max-h-[90vh] overflow-hidden p-0 rounded-2xl flex flex-col">
         {selectedProduct && (
           <>
             {/* Imagem do produto */}
@@ -160,32 +152,22 @@ export default function ProductModal({
                   {selectedProduct.name}
                 </DialogTitle>
               </DialogHeader>
-              <p className="text-muted-foreground mt-2 leading-relaxed">
-                {selectedProduct.description}
-              </p>
-              <p className="text-2xl font-bold text-primary mt-4">
-                R$ {selectedProduct.price.toFixed(2)}
-              </p>
+              <p className="text-muted-foreground mt-2 leading-relaxed">{selectedProduct.description}</p>
+              <p className="text-2xl font-bold text-primary mt-4">R$ {selectedProduct.price.toFixed(2)}</p>
             </div>
 
-            <ScrollArea className="max-h-[35vh]">
+            <ScrollArea className="flex-1 min-h-0">
               <div className="px-6 pb-4 space-y-4">
                 {/* Variantes */}
                 {selectedProduct.variantCategories.map((category) => (
                   <div key={category.id} className="bg-secondary/50 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h4 className="font-semibold text-foreground">
-                          {category.name}
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Selecione uma opção
-                        </p>
+                        <h4 className="font-semibold text-foreground">{category.name}</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">Selecione uma opção</p>
                       </div>
                       {category.isRequired && (
-                        <Badge className="bg-primary/10 text-primary border-0 font-medium">
-                          Obrigatório
-                        </Badge>
+                        <Badge className="bg-primary/10 text-primary border-0 font-medium">Obrigatório</Badge>
                       )}
                     </div>
 
@@ -230,18 +212,14 @@ export default function ProductModal({
                   <div key={category.id} className="bg-secondary/50 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h4 className="font-semibold text-foreground">
-                          {category.name}
-                        </h4>
+                        <h4 className="font-semibold text-foreground">{category.name}</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {category.isRequired ? "Mínimo " + category.minSelections : "Opcional"} • 
-                          Até {category.maxSelections === null ? "sem limite" : category.maxSelections}
+                          {category.isRequired ? "Mínimo " + category.minSelections : "Opcional"} • Até{" "}
+                          {category.maxSelections === null ? "sem limite" : category.maxSelections}
                         </p>
                       </div>
                       {category.isRequired && (
-                        <Badge className="bg-primary/10 text-primary border-0 font-medium">
-                          Obrigatório
-                        </Badge>
+                        <Badge className="bg-primary/10 text-primary border-0 font-medium">Obrigatório</Badge>
                       )}
                     </div>
 
@@ -258,11 +236,9 @@ export default function ProductModal({
                             }`}
                           >
                             <div className="flex items-center gap-3">
-                              <div 
+                              <div
                                 className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${
-                                  isSelected 
-                                    ? "bg-primary border-primary" 
-                                    : "border-muted-foreground/30"
+                                  isSelected ? "bg-primary border-primary" : "border-muted-foreground/30"
                                 }`}
                               >
                                 {isSelected && <Check className="w-3 h-3 text-primary-foreground" />}
@@ -295,7 +271,7 @@ export default function ProductModal({
             </ScrollArea>
 
             {/* Footer com ações */}
-            <div className="border-t border-border p-4 bg-card/80 backdrop-blur-sm">
+            <div className="border-t border-border p-4 bg-card/80 backdrop-blur-sm shrink-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1 bg-secondary rounded-xl p-1.5">
                   <Button
