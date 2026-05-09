@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Minus, Plus } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
-import { Checkbox } from "../ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
+import { Minus, Plus, Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { ProductWithRelations } from "@/types/product-type";
 import { useCartStore } from "@/store/cart-store";
 import { recordAddToCart } from "@/actions/metrics/metrics";
@@ -140,54 +140,50 @@ export default function ProductModal({
 
   return (
     <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-      <DialogContent className="sm:max-w-md bg-background border-border max-h-[85vh] overflow-hidden p-0">
+      <DialogContent className="sm:max-w-lg bg-background border-border max-h-[90vh] overflow-hidden p-0 rounded-2xl">
         {selectedProduct && (
           <>
-            <div className="relative w-full h-48 bg-secondary overflow-hidden">
+            {/* Imagem do produto */}
+            <div className="relative w-full h-56 bg-secondary overflow-hidden">
               <img
                 src={selectedProduct.imageUrl || ""}
                 alt={selectedProduct.name}
                 className="w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
             </div>
 
-            <div className="p-6 pb-0">
+            {/* Info do produto */}
+            <div className="p-6 pb-4 -mt-12 relative z-10">
               <DialogHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <DialogTitle className="font-display text-2xl text-foreground pr-8">
-                      {selectedProduct.name}
-                    </DialogTitle>
-                  </div>
-                </div>
+                <DialogTitle className="text-2xl font-bold text-foreground leading-tight">
+                  {selectedProduct.name}
+                </DialogTitle>
               </DialogHeader>
-              <p className="text-muted-foreground mt-3">
+              <p className="text-muted-foreground mt-2 leading-relaxed">
                 {selectedProduct.description}
               </p>
-              <p className="font-display text-2xl font-bold text-primary mt-4">
+              <p className="text-2xl font-bold text-primary mt-4">
                 R$ {selectedProduct.price.toFixed(2)}
               </p>
             </div>
 
-            <ScrollArea className="max-h-[40vh]">
-              <div className="px-6 pb-4 space-y-6">
+            <ScrollArea className="max-h-[35vh]">
+              <div className="px-6 pb-4 space-y-4">
+                {/* Variantes */}
                 {selectedProduct.variantCategories.map((category) => (
-                  <div key={category.id} className="pt-4">
-                    <Separator className="mb-4" />
-                    <div className="flex items-center justify-between mb-3">
+                  <div key={category.id} className="bg-secondary/50 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h4 className="font-display font-semibold text-foreground">
+                        <h4 className="font-semibold text-foreground">
                           {category.name}
                         </h4>
-                        <p className="text-xs text-muted-foreground">
-                          {category.isRequired ? "Obrigatório" : "Opcional"}
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          Selecione uma opção
                         </p>
                       </div>
                       {category.isRequired && (
-                        <Badge
-                          variant="outline"
-                          className="text-primary border-primary"
-                        >
+                        <Badge className="bg-primary/10 text-primary border-0 font-medium">
                           Obrigatório
                         </Badge>
                       )}
@@ -203,124 +199,127 @@ export default function ProductModal({
                           selectVariant(category.id, variantId, variant.priceModifier);
                         }
                       }}
+                      className="space-y-2"
                     >
-                      <div className="space-y-2">
-                        {category.variants.map((variant) => (
-                          <div key={variant.id} className="flex items-center space-x-2">
-                            <RadioGroupItem value={variant.id} id={variant.id} />
-                            <Label htmlFor={variant.id} className="flex-1 cursor-pointer flex items-center justify-between">
-                              <span className="text-foreground">{variant.name}</span>
-                              {variant.priceModifier > 0 && (
-                                <span className="text-muted-foreground text-sm">
-                                  + R$ {variant.priceModifier.toFixed(2)}
-                                </span>
-                              )}
-                            </Label>
+                      {category.variants.map((variant) => (
+                        <label
+                          key={variant.id}
+                          className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                            isVariantSelected(category.id, variant.id)
+                              ? "border-primary bg-primary/5"
+                              : "border-transparent bg-background hover:border-border"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem value={variant.id} id={variant.id} className="border-2" />
+                            <span className="text-foreground font-medium">{variant.name}</span>
                           </div>
-                        ))}
-                      </div>
+                          {variant.priceModifier > 0 && (
+                            <span className="text-muted-foreground text-sm font-medium">
+                              + R$ {variant.priceModifier.toFixed(2)}
+                            </span>
+                          )}
+                        </label>
+                      ))}
                     </RadioGroup>
                   </div>
                 ))}
 
+                {/* Adicionais */}
                 {selectedProduct.addOnCategories.map((category) => (
-                  <div key={category.id} className="pt-4">
-                    <Separator className="mb-4" />
-                    <div className="flex items-center justify-between mb-3">
+                  <div key={category.id} className="bg-secondary/50 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h4 className="font-display font-semibold text-foreground">
+                        <h4 className="font-semibold text-foreground">
                           {category.name}
                         </h4>
-                        <p className="text-xs text-muted-foreground">
-                          {category.isRequired ? "Obrigatório" : "Opcional"} •
-                          Escolha até{" "}
-                          {category.maxSelections === null
-                            ? "sem limite"
-                            : category.maxSelections}
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {category.isRequired ? "Mínimo " + category.minSelections : "Opcional"} • 
+                          Até {category.maxSelections === null ? "sem limite" : category.maxSelections}
                         </p>
                       </div>
                       {category.isRequired && (
-                        <Badge
-                          variant="outline"
-                          className="text-primary border-primary"
-                        >
+                        <Badge className="bg-primary/10 text-primary border-0 font-medium">
                           Obrigatório
                         </Badge>
                       )}
                     </div>
 
                     <div className="space-y-2">
-                      {(category.addOns || []).map((addon) => (
-                        <label
-                          key={addon.id}
-                          className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all ${
-                            isAddonSelected(category.id, addon.id)
-                              ? "border-primary bg-primary/10"
-                              : "border-border hover:border-muted-foreground"
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
+                      {(category.addOns || []).map((addon) => {
+                        const isSelected = isAddonSelected(category.id, addon.id);
+                        return (
+                          <label
+                            key={addon.id}
+                            className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                              isSelected
+                                ? "border-primary bg-primary/5"
+                                : "border-transparent bg-background hover:border-border"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${
+                                  isSelected 
+                                    ? "bg-primary border-primary" 
+                                    : "border-muted-foreground/30"
+                                }`}
+                              >
+                                {isSelected && <Check className="w-3 h-3 text-primary-foreground" />}
+                              </div>
+                              <span className="text-foreground font-medium">{addon.name}</span>
+                            </div>
+                            {addon.price > 0 && (
+                              <span className="text-muted-foreground text-sm font-medium">
+                                + R$ {addon.price.toFixed(2)}
+                              </span>
+                            )}
                             <Checkbox
-                              checked={isAddonSelected(
-                                category.id,
-                                addon.id
-                              )}
+                              checked={isSelected}
                               onCheckedChange={() =>
                                 toggleAddon(
                                   category.id,
-                                  {
-                                    id: addon.id,
-                                    name: addon.name,
-                                    price: addon.price,
-                                  },
+                                  { id: addon.id, name: addon.name, price: addon.price },
                                   category.maxSelections
                                 )
                               }
+                              className="sr-only"
                             />
-                            <span className="text-foreground">
-                              {addon.name}
-                            </span>
-                          </div>
-                          {addon.price > 0 && (
-                            <span className="text-muted-foreground text-sm">
-                              + R$ {addon.price.toFixed(2)}
-                            </span>
-                          )}
-                        </label>
-                      ))}
+                          </label>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
               </div>
             </ScrollArea>
 
-            <div className="border-t border-border p-4 bg-background">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
+            {/* Footer com ações */}
+            <div className="border-t border-border p-4 bg-card/80 backdrop-blur-sm">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1 bg-secondary rounded-xl p-1.5">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9"
-                    onClick={() =>
-                      setProductQuantity((q) => Math.max(1, q - 1))
-                    }
+                    className="h-10 w-10 rounded-lg hover:bg-background"
+                    onClick={() => setProductQuantity((q) => Math.max(1, q - 1))}
                   >
                     <Minus className="w-4 h-4" />
                   </Button>
-                  <span className="w-8 text-center font-semibold text-foreground">
+                  <span className="w-10 text-center font-bold text-foreground text-lg">
                     {productQuantity}
                   </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9"
+                    className="h-10 w-10 rounded-lg hover:bg-background"
                     onClick={() => setProductQuantity((q) => q + 1)}
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
                 <Button
-                  className="flex-1 h-11"
+                  className="flex-1 h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20"
                   disabled={!canAddToCart()}
                   onClick={handleAddToCart}
                 >
